@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { logCmd } from './log';
 
-export default function (cmd: string) {
+export default function (cmd: string, options: any = { stdio: 'ignore' }) {
     logCmd(cmd);
-    execSync(cmd, { stdio: 'ignore' });
+    execSync(cmd, options);
 }
