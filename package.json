@@ -1,10 +1,25 @@
 {
     "name": "xsc",
+    "description": "A cli tool with common git command sets.",
     "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Pobuca-Ltd/xsc.git"
+    },
+    "bin": {
+        "xcommit": "./bin/xcommit.js"
+    },
+    "scripts": {
+        "dev": "npm link && tsc -w"
+    },
+    "dependencies": {
+        "chalk": "^2.4.2"
+    },
     "devDependencies": {
+        "@types/node": "^12.11.7",
         "@types/chalk": "^2.2.0",
-        "chalk": "^2.4.2",
         "nodemon": "^1.19.4",
+        "ts-node": "^8.4.1",
         "typescript": "^3.6.4"
     }
 }
