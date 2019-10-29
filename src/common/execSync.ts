@@ -3,5 +3,5 @@ import { logCmd } from './log';
 
 export default function (cmd: string) {
     logCmd(cmd);
-    execSync(cmd);
+    execSync(cmd, { stdio: 'ignore' });
 }
