@@ -20,7 +20,7 @@ export default async function processProductionCommand(cmd: Command, prodCommand
 
     switch (subCommand) {
         case SubCommand.Start:
-            goToOriginBranch(cmd.terminal, ProdCommandBaseBranchMap[prodCommand]);
+            goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
             packageFile = await getLocalPackageFile(cmd.terminal);
             version = packageFile.version;
             const newVersion = inc(version, ProdCommandVersionSegmentMap[prodCommand]);
