@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import CLI from './CLI';
 import ITerminal from './interfaces/ITerminal';
 
@@ -12,6 +13,16 @@ describe('CLI', () => {
         };
 
         cli = new CLI(terminal);
+    });
+
+    it('should error on unknown command', async () => {
+        let errored = false;
+
+        await cli.invoke('unknown', []).catch(() => errored = true);
+
+        if (!errored) {
+            throw new Error('Did not error');
+        }
     });
 
     it('should invoke a command', async () => {
@@ -30,8 +41,16 @@ describe('CLI', () => {
         await cli.invoke('xhotfix', ['start']);
     });
 
-    it('should start a release', async () => {
+    it('should start a hotfix', async () => {
         await cli.invoke('xhotfix', ['finish']);
+    });
+
+    it('should start a feature', async () => {
+        await cli.invoke('xfeature', ['start', 'my-feature']);
+    });
+
+    it('should start a feature', async () => {
+        await cli.invoke('xfeature', ['finish']);
     });
 
     it('should show version', async () => {
