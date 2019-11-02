@@ -1,7 +1,12 @@
 import CLI from './CLI';
+import ITerminal from './interfaces/ITerminal';
 
 describe('CLI', () => {
     it('should instantiate', () => {
-        const cli = new CLI();
+        const terminal: ITerminal = {
+            execSync() { return new Buffer([]); }
+        };
+
+        const cli = new CLI(terminal);
     });
 });
