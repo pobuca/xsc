@@ -54,5 +54,5 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: "Publish Artifact: dist"
     inputs:
-      PathtoPublish: "./dist"
-      ArtifactName: dist
+      PathtoPublish: "."
+      ArtifactName: package
