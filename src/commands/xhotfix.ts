@@ -17,7 +17,7 @@ export default class XHotfixCommand extends Command {
                 const flow = new Flow(this.terminal, FlowType.Release);
                 goToOriginBranch(this.terminal, 'master');
                 packageFile = await getLocalPackageFile(this.terminal);
-                version = packageFile.verion;
+                version = packageFile.version;
                 const newVersion = await flow.findNextVersion(version);
 
                 await this.execSync(`git flow hotfix start ${newVersion}`);

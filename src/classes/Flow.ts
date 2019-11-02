@@ -10,14 +10,14 @@ export class Flow {
     constructor(private terminal: ITerminal, private flow: FlowType) { }
 
     public async findNextVersion(version: string) {
-        let out: Buffer;
+        let out: string;
 
         do {
-            out = await this.terminal.execSync(`git ls-remote origin ${this.flow}/${version}`, { stdio: 'inherit' });
+            out = await this.terminal.execSync(`git ls-remote origin ${this.flow}/${version}`, {
+                stdio: 'pipe'
+            }).toString();
 
-            if (out) {
-                version = inc(version, Flow.VersionSegmentFlowMap[this.flow]);
-            }
+            version = inc(version, Flow.VersionSegmentFlowMap[this.flow]);
         } while (out);
 
         return version;
