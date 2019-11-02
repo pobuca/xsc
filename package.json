@@ -1,7 +1,7 @@
 {
 	"name": "@pobuca/xsc",
 	"description": "A cli tool with common git command sets.",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Pobuca-Ltd/xsc.git"
