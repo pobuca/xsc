@@ -8,6 +8,7 @@
     },
     "bin": {
         "xcommit": "./bin/xcommit.js",
+        "xfeature": "./bin/xfeature.js",
         "xsc": "./bin/xsc.js"
     },
     "scripts": {
