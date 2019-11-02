@@ -1,7 +1,7 @@
 const { green, cyan, red } = require('chalk');
 const CLI = require('../dist/CLI').default;
 const cli = new CLI({
-    execSync: require('child_process').execSync
+    execSync: require('child_process').execSync,
 });
 
 cli.onAny((event, data) => {
@@ -10,6 +10,6 @@ cli.onAny((event, data) => {
 
 module.exports = cli;
 
-process.on('unhandledRejection', e => {
+process.on('unhandledRejection', (e) => {
     console.error(red(e.message));
 });
