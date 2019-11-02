@@ -1,12 +1,14 @@
 import { EventEmitter2 } from 'eventemitter2';
 import Command from './classes/Command';
 import XCommitCommand from './commands/xcommit';
+import XFeatureCommand from './commands/xfeature';
 import XSCCommand from './commands/xsc';
 import ITerminal from './interfaces/ITerminal';
 
 export default class CLI extends EventEmitter2 {
     private static commands: any[] = [
         XCommitCommand,
+        XFeatureCommand,
         XSCCommand
     ];
 
@@ -29,5 +31,7 @@ export default class CLI extends EventEmitter2 {
                 return CommandConstructor;
             }
         }
+
+        throw new Error(`Unknown command: ${commandName}`);
     }
 }

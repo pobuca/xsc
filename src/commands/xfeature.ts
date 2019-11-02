@@ -1,7 +1,7 @@
 import Command from '../classes/Command';
 import getCurrentBranch from './common/getCurrentBranch';
 
-export default class XSCCommand extends Command {
+export default class XFeatureCommand extends Command {
     public static command = 'xfeature';
 
     public async invoke(subCommand: SubCommand, featureName: string) {
@@ -10,7 +10,7 @@ export default class XSCCommand extends Command {
                 await this.execSync(`git checkout develop`);
                 await this.execSync(`git pull`);
                 await this.execSync(`git flow feature start ${featureName}`);
-                await this.execSync(`git push`);
+                await this.execSync(`git push --set-upstream origin feature/${featureName}`);
                 break;
             case SubCommand.Finish:
                 const currentBranch = await getCurrentBranch(this.terminal);
