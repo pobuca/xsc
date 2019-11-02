@@ -54,10 +54,10 @@ steps:
   - task: CopyFiles@2
     inputs:
       contents: |
-        'dist/**'
-        'bin/**'
-        'package.json'
-        '.npmignore'
+        dist/**
+        bin/**
+        package.json
+        .npmignore
       targetFolder: $(Build.ArtifactStagingDirectory)
       
   - task: PublishBuildArtifacts@1
