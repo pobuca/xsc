@@ -31,7 +31,10 @@ export default class XHotfixCommand extends Command {
                 packageFile = await getLocalPackageFile(this.terminal);
                 version = packageFile.version;
                 await this.execSync(`hub pull-request -b master -m "Merge hotfix/${version} into master"`);
-                await this.execSync(`hub pull-request -b develop -m "Merge hotfix/${version} into develop"`);
+
+                await this.execSync(`git checkout -b hotfix/${version}-develop`);
+                await this.execSync(`git push -u origin hotfix/${version}-develop`);
+                await this.execSync(`hub pull-request -b develop -m "Merge hotfix/${version}-develop into develop"`);
                 break;
         }
     }

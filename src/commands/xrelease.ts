@@ -31,7 +31,10 @@ export default class XReleaseCommand extends Command {
                 packageFile = await getLocalPackageFile(this.terminal);
                 version = packageFile.version;
                 await this.execSync(`hub pull-request -b master -m "Merge release/${version} into master"`);
-                await this.execSync(`hub pull-request -b develop -m "Merge release/${version} into develop"`);
+
+                await this.execSync(`git checkout -b release/${version}-develop`);
+                await this.execSync(`git push -u origin release/${version}-develop`);
+                await this.execSync(`hub pull-request -b develop -m "Merge release/${version}-develop into develop"`);
                 break;
         }
     }
