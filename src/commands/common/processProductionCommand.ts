@@ -26,6 +26,7 @@ export default async function processProductionCommand(cmd: Command, prodCommand
             const newVersion = inc(version, ProdCommandVersionSegmentMap[prodCommand]);
             const packageFileName = resolve(cmd.terminal.cwd, 'package.json');
 
+            await cmd.execSync(`git branch -d ${prodCommand}/${newVersion}`);
             await cmd.execSync(`git flow ${prodCommand} start ${newVersion}`);
 
             packageFile.version = newVersion;
