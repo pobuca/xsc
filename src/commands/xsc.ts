@@ -8,8 +8,8 @@ export default class XSCCommand extends Command {
             // Initialize `git flow` and `hub` since they are needed
             // for other operations.
             case SubCommand.Init:
-                this.execSync(`git flow init`, { stdio: 'inherit' });
-                this.execSync(`hub fetch --all`, { stdio: 'inherit' });
+                await this.execSync(`git flow init`, { stdio: 'inherit' });
+                await this.execSync(`hub fetch --all`, { stdio: 'inherit' });
                 break;
             default:
                 this.emit('log', require('../../package').version);

@@ -13,6 +13,6 @@ export default abstract class Command extends EventEmitter2 implements ICommand 
     }
     public async execSync(command: string, options: ExecSyncOptions = { stdio: 'ignore' }) {
         this.emit('execSync', command);
-        this.terminal.execSync(command, options);
+        await this.terminal.execSync(command, options);
     }
 }
