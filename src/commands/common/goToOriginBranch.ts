@@ -1,7 +1,7 @@
-import ITerminal from '../../interfaces/ITerminal';
+import Command from '../../classes/Command';
 
-export default async function goToOriginBranch(terminal: ITerminal, branch: string) {
-    await terminal.execSync('git fetch --all', { stdio: 'ignore' });
-    await terminal.execSync(`git checkout ${branch}`, { stdio: 'ignore' });
-    await terminal.execSync(`git pull origin ${branch}`, { stdio: 'ignore' });
+export default async function goToOriginBranch(cmd: Command, branch: string) {
+    await cmd.execSync('git fetch --all');
+    await cmd.execSync(`git checkout ${branch}`);
+    await cmd.execSync(`git pull origin ${branch}`);
 }
