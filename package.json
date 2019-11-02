@@ -9,6 +9,8 @@
     "bin": {
         "xcommit": "./bin/xcommit.js",
         "xfeature": "./bin/xfeature.js",
+        "xrelease": "./bin/xrelease.js",
+        "xhotfix": "./bin/xhotfix.js",
         "xsc": "./bin/xsc.js"
     },
     "scripts": {
