@@ -1,7 +1,7 @@
 import CLI from './CLI';
 
 describe('CLI', () => {
-    it('should not error', () => {
+    it('should instantiate', () => {
         const cli = new CLI();
     });
 });
