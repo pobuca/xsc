@@ -29,7 +29,7 @@ export default class XHotfixCommand extends Command {
                 break;
             case SubCommand.Finish:
                 packageFile = await getLocalPackageFile(this.terminal);
-                version = packageFile.verion;
+                version = packageFile.version;
                 await this.execSync(`hub pull-request -b master -m "Merge hotfix/${version} into master"`);
                 await this.execSync(`hub pull-request -b develop -m "Merge hotfix/${version} into develop"`);
                 break;
