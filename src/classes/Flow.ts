@@ -10,7 +10,7 @@
 //     constructor(private flow: FlowType) { }
 
 //     public findNextVersion(version: string) {
-//         cmd(`git ls-remote origin ${this.flow}/${version}`, { stdio: 'inherit' })
+//         cmd(`git ls-remote origin ${this.flow}/${version}`, { stdio: 'inherit' });
 
 //         inc(version, Flow.VersionSegmentFlowMap[this.flow]);
 //         process.exit(1);
