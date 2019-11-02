@@ -2,6 +2,7 @@
 	"name": "@pobuca/xsc",
 	"description": "A cli tool with common git command sets.",
 	"version": "1.7.1",
+	"license": "MPL-2.0",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Pobuca-Ltd/xsc.git"
@@ -88,6 +89,5 @@
 		"email": "k.papadatos@pobuca.com",
 		"name": "Kosmas Papadatos",
 		"url": "https://github.com/kpapadatos"
-	},
-	"license": "MIT"
+	}
 }
