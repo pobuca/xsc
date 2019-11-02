@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
+import { inc } from 'semver';
 import Command from '../classes/Command';
-import { Flow, FlowType } from '../classes/Flow';
 import getLocalPackageFile from './common/getLocalPackageFile';
 import goToOriginBranch from './common/goToOriginBranch';
 
@@ -14,11 +14,10 @@ export default class XHotfixCommand extends Command {
 
         switch (subCommand) {
             case SubCommand.Start:
-                const flow = new Flow(this.terminal, FlowType.Release);
                 goToOriginBranch(this.terminal, 'master');
                 packageFile = await getLocalPackageFile(this.terminal);
                 version = packageFile.version;
-                const newVersion = await flow.findNextVersion(version);
+                const newVersion = inc(version, 'patch');
 
                 await this.execSync(`git flow hotfix start ${newVersion}`);
 

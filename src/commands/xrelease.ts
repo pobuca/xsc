@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
+import { inc } from 'semver';
 import Command from '../classes/Command';
-import { Flow, FlowType } from '../classes/Flow';
 import getLocalPackageFile from './common/getLocalPackageFile';
 import goToOriginBranch from './common/goToOriginBranch';
 
@@ -14,11 +14,10 @@ export default class XReleaseCommand extends Command {
 
         switch (subCommand) {
             case SubCommand.Start:
-                const flow = new Flow(this.terminal, FlowType.Release);
                 goToOriginBranch(this.terminal, 'develop');
                 packageFile = await getLocalPackageFile(this.terminal);
                 version = packageFile.version;
-                const newVersion = await flow.findNextVersion(version);
+                const newVersion = inc(version, 'minor');
 
                 await this.execSync(`git flow release start ${newVersion}`);
 
