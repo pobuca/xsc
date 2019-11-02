@@ -11,6 +11,9 @@ export default class XSCCommand extends Command {
                 this.execSync(`git flow init`, { stdio: 'inherit' });
                 this.execSync(`hub fetch --all`, { stdio: 'inherit' });
                 break;
+            default:
+                this.emit('log', require('../../package').version);
+                break;
         }
     }
 }
