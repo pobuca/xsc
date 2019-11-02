@@ -39,6 +39,8 @@ export default async function processProductionCommand(cmd: Command, prodCommand
             version = packageFile.version;
             await cmd.execSync(`hub pull-request -b master -m "Merge ${prodCommand}/${version} into master"`);
             await cmd.execSync(`hub pull-request -b develop -m "Merge ${prodCommand}/${version} into develop"`);
+            await cmd.execSync(`git checkout develop`);
+            await cmd.execSync(`git branch -d ${prodCommand}/${version}`);
             break;
     }
 }
