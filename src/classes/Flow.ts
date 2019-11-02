@@ -19,6 +19,8 @@ export class Flow {
                 version = inc(version, Flow.VersionSegmentFlowMap[this.flow]);
             }
         } while (out);
+
+        return version;
     }
 }
 
