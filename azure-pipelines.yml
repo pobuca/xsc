@@ -1,0 +1,58 @@
+trigger:
+  - develop
+  - master
+
+pool:
+  name: Pobuca Connect MPN Agents
+  demands:
+    - Agent.OS -equals Linux
+
+variables:
+  - group: XSC Coverage API Keys
+
+steps:
+  - task: NodeTool@0
+    displayName: "Use Node 10.x"
+    inputs:
+      versionSpec: 10.x
+
+  - script: npm i
+    displayName: npm i
+
+  - script: npm run build
+    displayName: build
+
+  - script: npm test
+    displayName: npm test
+
+  - script: npm run upload-coverage
+    displayName: Upload coverage to Codacy
+    env:
+      CODACY_PROJECT_TOKEN: $(xsc-codacy-coverage-api-key)
+
+  - script: |
+      curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      chmod +x ./cc-test-reporter
+      ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.json coverage/lcov.info
+      ./cc-test-reporter upload-coverage
+    displayName: Upload coverage to Code Climate
+    env:
+      CC_TEST_REPORTER_ID: $(xsc-codeclimate-reporter-id)
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: "test-results.xml"
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: "$(System.DefaultWorkingDirectory)/**/*coverage.xml"
+      reportDirectory: "$(System.DefaultWorkingDirectory)/**/coverage"
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: dist"
+    inputs:
+      PathtoPublish: "./dist"
+      ArtifactName: dist
