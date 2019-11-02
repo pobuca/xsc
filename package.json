@@ -16,7 +16,7 @@
 	"scripts": {
 		"dev": "npm link && concurrently -r npm:build:watch npm:test:watch",
 		"test": "nyc mocha",
-		"test:watch": "nyc mocha --watch",
+		"test:watch": "nyc mocha --reporter spec --watch",
 		"build": "tsc",
 		"upload-coverage": "cat ./coverage/lcov.info | codacy-coverage",
 		"build:watch": "tsc -w"
