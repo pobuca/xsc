@@ -3,6 +3,7 @@ const CLI = require('../dist/CLI').default;
 const cli = new CLI({
     cwd: process.cwd(),
     execSync: require('child_process').execSync,
+    writeFileSync: require('fs').writeFileSync,
 });
 
 cli.onAny((event, data) => {
