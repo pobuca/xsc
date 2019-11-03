@@ -1,7 +1,7 @@
 {
 	"name": "@pobuca/xsc",
 	"description": "A cli tool with common git command sets.",
-	"version": "1.13.0",
+	"version": "1.13.1",
 	"license": "MPL-2.0",
 	"readme": "README.md",
 	"contributors": [
@@ -61,9 +61,12 @@
 	"homepage": "https://github.com/Pobuca-Ltd/xsc#readme",
 	"main": "bin/xcommit.js",
 	"keywords": [
-		"cli",
 		"git",
-		"commandset"
+		"flow",
+		"git-flow",
+		"pobuca",
+		"workflow",
+		"xsc"
 	],
 	"nyc": {
 		"extends": "@istanbuljs/nyc-config-typescript",
