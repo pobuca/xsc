@@ -3,6 +3,10 @@
 	"description": "A cli tool with common git command sets.",
 	"version": "1.7.1",
 	"license": "MPL-2.0",
+	"readme": "README.md",
+	"contributors": [
+		"Kosmas Papadatos <kosmas.papadatos@gmail.com> (https://github.com/kpapadatos)"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Pobuca-Ltd/xsc.git"
