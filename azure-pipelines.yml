@@ -58,6 +58,7 @@ steps:
         bin/**
         package.json
         .npmignore
+        README.md
       targetFolder: $(Build.ArtifactStagingDirectory)
       
   - task: PublishBuildArtifacts@1
