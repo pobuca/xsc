@@ -18,6 +18,10 @@ export default async function processProductionCommand(cmd: Command, prodCommand
     let packageFile: any;
     let version: string;
 
+    if (!subCommand) {
+        subCommand = SubCommand.Start;
+    }
+
     switch (subCommand) {
         case SubCommand.Start:
             await goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
