@@ -61,9 +61,12 @@
 	"homepage": "https://github.com/Pobuca-Ltd/xsc#readme",
 	"main": "bin/xcommit.js",
 	"keywords": [
-		"cli",
 		"git",
-		"commandset"
+		"flow",
+		"git-flow",
+		"pobuca",
+		"workflow",
+		"xsc"
 	],
 	"nyc": {
 		"extends": "@istanbuljs/nyc-config-typescript",
