@@ -2,7 +2,7 @@
 ![Azure DevOps builds](https://img.shields.io/azure-devops/build/siebendev/pobuca%20connect/141)
 [![Codacy Badge](https://img.shields.io/codacy/grade/9ffa7850a79d411a99467c64efeaf5ef)](https://www.codacy.com/manual/Pobuca/xsc?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pobuca/xsc&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability-percentage/pobuca/xsc)](https://codeclimate.com/github/pobuca/xsc/maintainability)
-[![Codacy Badge](https://img.shields.io/codacy/coverage/9ffa7850a79d411a99467c64efeaf5ef/master)](https://www.codacy.com/manual/Pobuca/xsc?utm_source=github.com&utm_medium=referral&utm_content=pobuca/xsc&utm_campaign=Badge_Coverage)
+[![Codacy Badge](https://img.shields.io/codacy/coverage/9ffa7850a79d411a99467c64efeaf5ef/master)](https://www.codacy.com/manual/pobuca/xsc?utm_source=github.com&utm_medium=referral&utm_content=pobuca/xsc&utm_campaign=Badge_Coverage)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
 👩‍💻 A cli tool with common git command sets, used in the Pobuca workflow.
