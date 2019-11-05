@@ -1,7 +1,7 @@
 {
 	"name": "@pobuca/xsc",
 	"description": "A cli tool with common git command sets.",
-	"version": "1.13.1",
+	"version": "1.13.2",
 	"license": "MPL-2.0",
 	"readme": "README.md",
 	"contributors": [
@@ -9,7 +9,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Pobuca-Ltd/xsc.git"
+		"url": "git+https://github.com/pobuca/xsc.git"
 	},
 	"bin": {
 		"xcommit": "./bin/xcommit.js",
@@ -56,9 +56,9 @@
 		"typescript": "^3.6.4"
 	},
 	"bugs": {
-		"url": "https://github.com/Pobuca-Ltd/xsc/issues"
+		"url": "https://github.com/pobuca/xsc/issues"
 	},
-	"homepage": "https://github.com/Pobuca-Ltd/xsc#readme",
+	"homepage": "https://github.com/pobuca/xsc#readme",
 	"main": "bin/xcommit.js",
 	"keywords": [
 		"git",
