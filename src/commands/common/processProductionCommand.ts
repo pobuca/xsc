@@ -29,6 +29,7 @@ export default async function processProductionCommand(cmd: Command, prodCommand
             break;
         case SubCommand.Start:
         default:
+            await cmd.execSync('git stash');
             await goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
 
             packageFile = await getLocalPackageFile(cmd.terminal);
@@ -44,6 +45,7 @@ export default async function processProductionCommand(cmd: Command, prodCommand
 
             await cmd.execSync(`git commit -a -m ${newVersion}`);
             await cmd.execSync(`git push --set-upstream origin ${prodCommand}/${newVersion}`);
+            await cmd.execSync('git stash pop');
             break;
     }
 }
