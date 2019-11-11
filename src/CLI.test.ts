@@ -9,6 +9,7 @@ describe('CLI', () => {
         const terminal: ITerminal = {
             cwd: '.',
             writeFileSync() { /* Ignore */ },
+            readFileSync() { return Buffer.from([]); },
             execSync() { return new Buffer([]); }
         };
 
