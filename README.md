@@ -8,7 +8,7 @@
 👩‍💻 A cli tool with common git command sets, used in the Pobuca workflow.
 
 ### Commands
-- `xsc`
+- `xsc [init]`
 - `xcommit ...message`
 - `xfeature [start|finish] <feature-name?>`
 - `xrelease [start|finish]`

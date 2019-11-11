@@ -4,6 +4,7 @@ const cli = new CLI({
     cwd: process.cwd(),
     execSync: require('child_process').execSync,
     writeFileSync: require('fs').writeFileSync,
+    readFileSync: require('fs').readFileSync
 });
 
 /**
