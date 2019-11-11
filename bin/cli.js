@@ -6,8 +6,14 @@ const cli = new CLI({
     writeFileSync: require('fs').writeFileSync,
 });
 
+/**
+ * This delimiter is used to separate our logs
+ * from the last output's stdout binary stream.
+ */
+const DELIM = ' ';
+
 cli.onAny((event, data) => {
-    console.log(`${green('xsc')} ${cyan(data)}`);
+    console.log(`${DELIM}${green('xsc')} ${cyan(data)}`);
 });
 
 module.exports = cli;
