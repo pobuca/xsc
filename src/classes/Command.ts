@@ -11,8 +11,15 @@ export default abstract class Command extends EventEmitter2 implements ICommand 
     public async invoke(...params: string[]) {
         throw new Error('Not implemented');
     }
-    public async execSync(command: string, options: ExecSyncOptions = { stdio: ['ignore', 'ignore', 'inherit'] }) {
-        this.emit('execSync', command);
+    public async execSync(
+        command: string,
+        options: ExecSyncOptions = { stdio: ['ignore', 'ignore', 'inherit'] },
+        silent = false
+    ) {
+        if (!silent) {
+            this.emit('execSync', command);
+        }
+
         await this.terminal.execSync(command, options);
     }
 }

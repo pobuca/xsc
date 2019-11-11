@@ -7,14 +7,14 @@ const cli = new CLI({
     readFileSync: require('fs').readFileSync
 });
 
-/**
- * This delimiter is used to separate our logs
- * from the last output's stdout binary stream.
- */
-const DELIM = ' ';
-
 cli.onAny((event, data) => {
-    console.log(`${DELIM}${green('xsc')} ${cyan(data)}`);
+    let prefix = green('xsc');
+
+    if (event == 'raw') {
+        prefix = '';
+    }
+
+    console.log(`${prefix} ${cyan(data)}`);
 });
 
 module.exports = cli;
