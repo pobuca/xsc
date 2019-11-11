@@ -15,38 +15,10 @@ const ProdCommandVersionSegmentMap: { [cmd in ProdCommand]: ReleaseType } = {
 };
 
 export default async function processProductionCommand(cmd: Command, prodCommand: ProdCommand, subCommand: SubCommand) {
-    let packageFile: any;
-    let version: string;
-
-    switch (subCommand) {
-        case SubCommand.Finish:
-            packageFile = await getLocalPackageFile(cmd.terminal);
-            version = packageFile.version;
-            await cmd.execSync(`hub pull-request -b master -m "Merge ${prodCommand}/${version} into master"`);
-            await cmd.execSync(`hub pull-request -b develop -m "Merge ${prodCommand}/${version} into develop"`);
-            await cmd.execSync(`git checkout develop`);
-            await cmd.execSync(`git branch -d ${prodCommand}/${version}`);
-            break;
-        case SubCommand.Start:
-        default:
-            await cmd.execSync('git stash');
-            await goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
-
-            packageFile = await getLocalPackageFile(cmd.terminal);
-            version = packageFile.version;
-
-            const newVersion = inc(version, ProdCommandVersionSegmentMap[prodCommand]);
-            const packageFileName = resolve(cmd.terminal.cwd, 'package.json');
-
-            await cmd.execSync(`git flow ${prodCommand} start ${newVersion}`);
-
-            packageFile.version = newVersion;
-            cmd.terminal.writeFileSync(packageFileName, JSON.stringify(packageFile, null, '\t'));
-
-            await cmd.execSync(`git commit -a -m ${newVersion}`);
-            await cmd.execSync(`git push --set-upstream origin ${prodCommand}/${newVersion}`);
-            await cmd.execSync('git stash pop');
-            break;
+    if (subCommand === SubCommand.Finish) {
+        await finishCommand(cmd, prodCommand);
+    } else if (subCommand === SubCommand.Start) {
+        await startCommand(cmd, prodCommand);
     }
 }
 
@@ -58,4 +30,39 @@ export enum SubCommand {
 export enum ProdCommand {
     Hotfix = 'hotfix',
     Release = 'release'
+}
+
+async function startCommand(cmd: Command, prodCommand: ProdCommand) {
+    let packageFile: any;
+    let version: string;
+
+    await cmd.execSync('git stash');
+    await goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
+
+    packageFile = await getLocalPackageFile(cmd.terminal);
+    version = packageFile.version;
+
+    const newVersion = inc(version, ProdCommandVersionSegmentMap[prodCommand]);
+    const packageFileName = resolve(cmd.terminal.cwd, 'package.json');
+
+    await cmd.execSync(`git flow ${prodCommand} start ${newVersion}`);
+
+    packageFile.version = newVersion;
+    cmd.terminal.writeFileSync(packageFileName, JSON.stringify(packageFile, null, '\t'));
+
+    await cmd.execSync(`git commit -a -m ${newVersion}`);
+    await cmd.execSync(`git push --set-upstream origin ${prodCommand}/${newVersion}`);
+    await cmd.execSync('git stash pop');
+}
+
+async function finishCommand(cmd: Command, prodCommand: ProdCommand) {
+    let packageFile: any;
+    let version: string;
+
+    packageFile = await getLocalPackageFile(cmd.terminal);
+    version = packageFile.version;
+    await cmd.execSync(`hub pull-request -b master -m "Merge ${prodCommand}/${version} into master"`);
+    await cmd.execSync(`hub pull-request -b develop -m "Merge ${prodCommand}/${version} into develop"`);
+    await cmd.execSync(`git checkout develop`);
+    await cmd.execSync(`git branch -d ${prodCommand}/${version}`);
 }
