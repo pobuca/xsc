@@ -17,7 +17,7 @@ export default class XSCCommand extends Command {
         } catch (e) {
             await this.execSync('git init');
             await this.execSync('git add . && git commit -m "Initial commit"');
-            await this.execSync('hub create -d "Initial commit"', { stdio: 'inherit' });
+            await this.execSync('hub create -p -d "Initial commit"', { stdio: 'inherit' });
         }
 
         await this.execSync(`git flow init`, { stdio: 'inherit' });
