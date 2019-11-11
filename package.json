@@ -24,8 +24,7 @@
 		"test:watch": "nyc mocha --reporter spec --watch",
 		"build": "tsc",
 		"upload-coverage": "cat ./coverage/lcov.info | codacy-coverage",
-		"build:watch": "tsc -w",
-		"postinstall": "node ./bin/xsc"
+		"build:watch": "tsc -w"
 	},
 	"dependencies": {
 		"@types/eventemitter2": "^4.1.0",
