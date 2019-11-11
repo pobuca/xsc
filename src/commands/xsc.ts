@@ -44,8 +44,6 @@ export default class XSCCommand extends Command {
         await this.verifyCommand('git', 'git --version');
         await this.verifyCommand('git flow', 'git flow version');
         await this.verifyCommand('hub', 'hub --version');
-
-        this.emit('raw', '');
     }
 
     private async verifyCommand(commandName: string, command: string) {
