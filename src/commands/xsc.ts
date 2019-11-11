@@ -1,4 +1,7 @@
+import chalk from 'chalk';
 import Command from '../classes/Command';
+
+const { green, red } = chalk;
 
 export default class XSCCommand extends Command {
     public static command = 'xsc';
@@ -16,11 +19,39 @@ export default class XSCCommand extends Command {
         '\tversiontag = '
     ].join('\n');
 
+    private static asciiLogo = [
+        ' _  _  ___   ___ ',
+        '( \\/ )/ __) / __)',
+        ' )  ( \\__ \\( (__ ',
+        `(_/\\_)(___/ \\___) v${require('../../package').version}`,
+        '        by Pobuca',
+        ''
+    ];
+
     public async invoke(subCommand: SubCommand) {
         if (subCommand === SubCommand.Init) {
             await this.initializeRepo();
         } else {
-            this.emit('log', require('../../package').version);
+            await this.statusCommand();
+        }
+    }
+
+    private async statusCommand() {
+        for (const line of XSCCommand.asciiLogo) {
+            this.emit('raw', line);
+        }
+
+        await this.verifyCommand('git', 'git --version');
+        await this.verifyCommand('git flow', 'git flow version');
+        await this.verifyCommand('hub', 'hub --version');
+    }
+
+    private async verifyCommand(commandName: string, command: string) {
+        try {
+            await this.execSync(command, { stdio: 'ignore' }, true);
+            this.emit('raw', `    ${green('✓')} ${commandName}`);
+        } catch (e) {
+            this.emit('raw', `    ${red('✗')} ${commandName}`);
         }
     }
 
