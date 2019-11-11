@@ -38,22 +38,22 @@ export default class XSCCommand extends Command {
 
     private async statusCommand() {
         for (const line of XSCCommand.asciiLogo) {
-            this.emit('log', line);
+            this.emit('raw', line);
         }
 
         await this.verifyCommand('git', 'git --version');
         await this.verifyCommand('git flow', 'git flow version');
         await this.verifyCommand('hub', 'hub --version');
 
-        this.emit('log', '');
+        this.emit('raw', '');
     }
 
     private async verifyCommand(commandName: string, command: string) {
         try {
             await this.execSync(command, { stdio: 'ignore' }, true);
-            this.emit('log', `    ${green('✓')} ${commandName}`);
+            this.emit('raw', `    ${green('✓')} ${commandName}`);
         } catch (e) {
-            this.emit('log', `    ${red('✗')} ${commandName}`);
+            this.emit('raw', `    ${red('✗')} ${commandName}`);
         }
     }
 

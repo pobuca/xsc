@@ -25,7 +25,7 @@
 		"build": "tsc",
 		"upload-coverage": "cat ./coverage/lcov.info | codacy-coverage",
 		"build:watch": "tsc -w",
-		"postinstall": "xsc"
+		"postinstall": "node ./bin/xsc"
 	},
 	"dependencies": {
 		"@types/eventemitter2": "^4.1.0",

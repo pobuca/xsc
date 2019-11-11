@@ -14,7 +14,13 @@ const cli = new CLI({
 const DELIM = ' ';
 
 cli.onAny((event, data) => {
-    console.log(`${DELIM}${green('xsc')} ${cyan(data)}`);
+    let prefix = green('xsc');
+
+    if (event == 'raw') {
+        prefix = '';
+    }
+
+    console.log(`${DELIM}${prefix} ${cyan(data)}`);
 });
 
 module.exports = cli;
