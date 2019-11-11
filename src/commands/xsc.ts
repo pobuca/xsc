@@ -4,17 +4,24 @@ export default class XSCCommand extends Command {
     public static command = 'xsc';
 
     public async invoke(subCommand: SubCommand) {
-        switch (subCommand) {
-            // Initialize `git flow` and `hub` since they are needed
-            // for other operations.
-            case SubCommand.Init:
-                await this.execSync(`git flow init`, { stdio: 'inherit' });
-                await this.execSync(`hub ci-status`, { stdio: 'inherit' });
-                break;
-            default:
-                this.emit('log', require('../../package').version);
-                break;
+        if (subCommand === SubCommand.Init) {
+            await this.initializeRepo();
+        } else {
+            this.emit('log', require('../../package').version);
         }
+    }
+
+    private async initializeRepo() {
+        try {
+            await this.execSync('git status');
+        } catch (e) {
+            await this.execSync('git init');
+            await this.execSync('git add . && git commit -m "Initial commit"');
+            await this.execSync('hub create -d "Initial commit"', { stdio: 'inherit' });
+        }
+
+        await this.execSync(`git flow init`, { stdio: 'inherit' });
+        await this.execSync(`hub ci-status`, { stdio: 'inherit' });
     }
 }
 
