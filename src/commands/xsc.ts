@@ -49,9 +49,9 @@ export default class XSCCommand extends Command {
     private async verifyCommand(commandName: string, command: string) {
         try {
             await this.execSync(command, { stdio: 'ignore' }, true);
-            this.emit('raw', `    ${green('✓')} ${commandName}`);
+            this.emit('raw', `    ${green('√')} ${commandName}`);
         } catch (e) {
-            this.emit('raw', `    ${red('✗')} ${commandName}`);
+            this.emit('raw', `    ${red('x')} ${commandName}`);
         }
     }
 
