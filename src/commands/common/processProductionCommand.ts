@@ -3,6 +3,8 @@ import { inc, ReleaseType } from 'semver';
 import Command from '../../classes/Command';
 import getLocalPackageFile from './getLocalPackageFile';
 import goToOriginBranch from './goToOriginBranch';
+import inferProjectDetails from './inferProjectDetails';
+import updateProjectVersion from './updateProjectVersion';
 
 const ProdCommandBaseBranchMap: { [cmd in ProdCommand]: string } = {
     hotfix: 'master',
@@ -33,22 +35,16 @@ export enum ProdCommand {
 }
 
 async function startCommand(cmd: Command, prodCommand: ProdCommand) {
-    let packageFile: any;
-    let version: string;
-
     await cmd.execSync('git stash');
     await goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
 
-    packageFile = await getLocalPackageFile(cmd.terminal);
-    version = packageFile.version;
+    const { version } = await inferProjectDetails(cmd.terminal);
 
     const newVersion = inc(version, ProdCommandVersionSegmentMap[prodCommand]);
-    const packageFileName = resolve(cmd.terminal.cwd, 'package.json');
 
     await cmd.execSync(`git flow ${prodCommand} start ${newVersion}`);
 
-    packageFile.version = newVersion;
-    cmd.terminal.writeFileSync(packageFileName, JSON.stringify(packageFile, null, '\t'));
+    await updateProjectVersion(cmd.terminal, newVersion);
 
     await cmd.execSync(`git commit -a -m ${newVersion}`);
     await cmd.execSync(`git push --set-upstream origin ${prodCommand}/${newVersion}`);
