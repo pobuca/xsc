@@ -10,7 +10,6 @@ export default async function updateProjectVersion(terminal: ITerminal, version:
 
         packageFile.version = version;
         terminal.writeFileSync(packageFileName, JSON.stringify(packageFile, null, '\t'));
-
     } catch (e) {
         const dir = terminal.readdirSync('.');
 
@@ -21,7 +20,5 @@ export default async function updateProjectVersion(terminal: ITerminal, version:
                 terminal.writeFileSync(`./${folder}/Properties/AssemblyInfo.cs`, assemblyInfo);
             } catch (e) { /* Ignore */ }
         }
-
-        throw new Error('Could not infer project details.');
     }
 }
