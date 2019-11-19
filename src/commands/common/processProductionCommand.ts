@@ -3,6 +3,8 @@ import { inc, ReleaseType } from 'semver';
 import Command from '../../classes/Command';
 import getLocalPackageFile from './getLocalPackageFile';
 import goToOriginBranch from './goToOriginBranch';
+import inferProjectDetails from './inferProjectDetails';
+import updateProjectVersion from './updateProjectVersion';
 
 const ProdCommandBaseBranchMap: { [cmd in ProdCommand]: string } = {
     hotfix: 'master',
@@ -33,22 +35,16 @@ export enum ProdCommand {
 }
 
 async function startCommand(cmd: Command, prodCommand: ProdCommand) {
-    let packageFile: any;
-    let version: string;
-
     await cmd.execSync('git stash');
     await goToOriginBranch(cmd, ProdCommandBaseBranchMap[prodCommand]);
 
-    packageFile = await getLocalPackageFile(cmd.terminal);
-    version = packageFile.version;
+    const { version } = await inferProjectDetails(cmd.terminal);
 
     const newVersion = inc(version, ProdCommandVersionSegmentMap[prodCommand]);
-    const packageFileName = resolve(cmd.terminal.cwd, 'package.json');
 
     await cmd.execSync(`git flow ${prodCommand} start ${newVersion}`);
 
-    packageFile.version = newVersion;
-    cmd.terminal.writeFileSync(packageFileName, JSON.stringify(packageFile, null, '\t'));
+    await updateProjectVersion(cmd.terminal, newVersion);
 
     await cmd.execSync(`git commit -a -m ${newVersion}`);
     await cmd.execSync(`git push --set-upstream origin ${prodCommand}/${newVersion}`);
@@ -56,11 +52,8 @@ async function startCommand(cmd: Command, prodCommand: ProdCommand) {
 }
 
 async function finishCommand(cmd: Command, prodCommand: ProdCommand) {
-    let packageFile: any;
-    let version: string;
+    const { version } = await inferProjectDetails(cmd.terminal);
 
-    packageFile = await getLocalPackageFile(cmd.terminal);
-    version = packageFile.version;
     await cmd.execSync(`hub pull-request -b master -m "Merge ${prodCommand}/${version} into master"`);
     await cmd.execSync(`hub pull-request -b develop -m "Merge ${prodCommand}/${version} into develop"`);
     await cmd.execSync(`git checkout develop`);

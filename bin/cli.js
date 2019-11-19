@@ -1,10 +1,14 @@
 const { green, cyan, red } = require('chalk');
+const { writeFileSync, readFileSync, readdirSync } = require('fs');
+const { clearLine, cursorTo } = require('readline');
+
 const CLI = require('../dist/CLI').default;
 const cli = new CLI({
     cwd: process.cwd(),
     execSync: require('child_process').execSync,
-    writeFileSync: require('fs').writeFileSync,
-    readFileSync: require('fs').readFileSync
+    writeFileSync: writeFileSync,
+    readdirSync: readdirSync,
+    readFileSync: readFileSync
 });
 
 cli.onAny((event, data) => {
@@ -14,6 +18,8 @@ cli.onAny((event, data) => {
         prefix = '';
     }
 
+    clearLine(process.stdout, 0);
+    cursorTo(process.stdout, 0, null);
     console.log(`${prefix} ${cyan(data)}`);
 });
 
