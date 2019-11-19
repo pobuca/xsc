@@ -10,6 +10,7 @@ describe('CLI', () => {
             cwd: '.',
             writeFileSync() { /* Ignore */ },
             readFileSync() { return Buffer.from([]); },
+            readdirSync() { return []; },
             execSync() { return new Buffer([]); }
         };
 
