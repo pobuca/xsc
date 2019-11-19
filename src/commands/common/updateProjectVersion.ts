@@ -3,7 +3,6 @@ import ITerminal from '../../interfaces/ITerminal';
 import getLocalPackageFile from './getLocalPackageFile';
 
 export default async function updateProjectVersion(terminal: ITerminal, version: string) {
-
     try {
         const packageFileName = resolve(terminal.cwd, 'package.json');
         const packageFile = await getLocalPackageFile(terminal);

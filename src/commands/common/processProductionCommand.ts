@@ -52,11 +52,8 @@ async function startCommand(cmd: Command, prodCommand: ProdCommand) {
 }
 
 async function finishCommand(cmd: Command, prodCommand: ProdCommand) {
-    let packageFile: any;
-    let version: string;
+    const { version } = await inferProjectDetails(cmd.terminal);
 
-    packageFile = await getLocalPackageFile(cmd.terminal);
-    version = packageFile.version;
     await cmd.execSync(`hub pull-request -b master -m "Merge ${prodCommand}/${version} into master"`);
     await cmd.execSync(`hub pull-request -b develop -m "Merge ${prodCommand}/${version} into develop"`);
     await cmd.execSync(`git checkout develop`);
