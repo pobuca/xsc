@@ -1,7 +1,5 @@
-import { resolve } from 'path';
 import { inc, ReleaseType } from 'semver';
 import Command from '../../classes/Command';
-import getLocalPackageFile from './getLocalPackageFile';
 import goToOriginBranch from './goToOriginBranch';
 import inferProjectDetails from './inferProjectDetails';
 import updateProjectVersion from './updateProjectVersion';
