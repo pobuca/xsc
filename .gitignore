@@ -3,3 +3,4 @@ node_modules
 coverage
 dist
 test-results.xml
+tmp
