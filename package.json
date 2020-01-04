@@ -1,7 +1,7 @@
 {
 	"name": "@pobuca/xsc",
 	"description": "A cli tool with common git command sets.",
-	"version": "1.20.0",
+	"version": "1.21.0",
 	"license": "MPL-2.0",
 	"readme": "README.md",
 	"contributors": [
