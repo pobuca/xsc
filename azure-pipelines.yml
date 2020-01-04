@@ -38,6 +38,8 @@ steps:
     displayName: Upload coverage to Code Climate
     env:
       CC_TEST_REPORTER_ID: $(xsc-codeclimate-reporter-id)
+      GIT_BRANCH: $(Build.SourceBranchName)
+      GIT_COMMIT: $(Build.SourceVersion)
 
   - task: PublishTestResults@2
     condition: succeededOrFailed()
