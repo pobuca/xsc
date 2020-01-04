@@ -5,6 +5,6 @@ export default class XHotfixCommand extends Command {
     public static command = 'xhotfix';
 
     public async invoke(subCommand: SubCommand) {
-        processProductionCommand(this, ProdCommand.Hotfix, subCommand);
+        await processProductionCommand(this, ProdCommand.Hotfix, subCommand);
     }
 }

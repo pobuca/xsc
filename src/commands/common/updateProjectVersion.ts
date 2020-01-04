@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import ITerminal from '../../interfaces/ITerminal';
 import getLocalPackageFile from './getLocalPackageFile';
+import tryGetCSharpProjectDetails from './tryGetCSharpProjectDetails';
 
 export default async function updateProjectVersion(terminal: ITerminal, version: string) {
     try {
@@ -19,13 +20,18 @@ async function updateNodeJSProjectVersion(terminal: ITerminal, version: string) 
 }
 
 async function updateCSharpProjectVersion(terminal: ITerminal, version: string) {
-    const dir = terminal.readdirSync('.');
+    const dir = terminal.readdirSync(terminal.cwd);
 
     for (const folder of dir) {
-        try {
-            let assemblyInfo = terminal.readFileSync(`./${folder}/Properties/AssemblyInfo.cs`).toString();
+        const projectDetails = tryGetCSharpProjectDetails(terminal, `${terminal.cwd}/${folder}`);
+
+        if (projectDetails) {
+            let assemblyInfo = terminal.readFileSync(projectDetails.versionFilePath).toString();
             assemblyInfo = assemblyInfo.replace(/AssemblyVersion\(\"([^\"]+)\"/, `AssemblyVersion("${version}.0"`);
-            terminal.writeFileSync(`./${folder}/Properties/AssemblyInfo.cs`, assemblyInfo);
-        } catch (e) { /* Ignore */ }
+
+            terminal.writeFileSync(projectDetails.versionFilePath, assemblyInfo);
+
+            return;
+        }
     }
 }

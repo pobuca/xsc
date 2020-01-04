@@ -1,5 +1,7 @@
+import { resolve } from 'path';
 import ITerminal from '../../interfaces/ITerminal';
 import getLocalPackageFile from './getLocalPackageFile';
+import tryGetCSharpProjectDetails from './tryGetCSharpProjectDetails';
 
 export default async function inferProjectDetails(terminal: ITerminal): Promise<IProjectDetails> {
     try {
@@ -19,10 +21,11 @@ async function getNodeJSProjectDetails(terminal: ITerminal) {
 }
 
 async function getCSharpProjectDetails(terminal: ITerminal) {
-    const dir = terminal.readdirSync('.');
+    const dir = terminal.readdirSync(terminal.cwd);
 
     for (const folder of dir) {
-        const projectDetails = tryGetCSharpProjectDetails(terminal, `./${folder}`);
+        const projectRoot = resolve(terminal.cwd, folder);
+        const projectDetails = tryGetCSharpProjectDetails(terminal, projectRoot);
 
         if (projectDetails) {
             return projectDetails;
@@ -32,20 +35,10 @@ async function getCSharpProjectDetails(terminal: ITerminal) {
     throw new Error('Could not infer project details.');
 }
 
-function tryGetCSharpProjectDetails(terminal: ITerminal, path: string) {
-    try {
-        const assemblyInfo = terminal.readFileSync(`${path}/Properties/AssemblyInfo.cs`).toString();
-
-        return {
-            type: ProjectType.CSharp,
-            version: assemblyInfo.match(/AssemblyVersion\(\"([^\"]+)\"/)[1].replace(/\.\d+$/, '')
-        } as IProjectDetails;
-    } catch (e) { /* Ignore */ }
-}
-
 export interface IProjectDetails {
     type: ProjectType;
     version: string;
+    versionFilePath: string;
 }
 
 export enum ProjectType {

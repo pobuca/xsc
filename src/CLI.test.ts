@@ -1,19 +1,28 @@
-import { expect } from 'chai';
+import * as del from 'del';
+import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { dest, src } from 'gulp';
+import { resolve } from 'path';
 import CLI from './CLI';
 import ITerminal from './interfaces/ITerminal';
 
+const TMP_PATH = './tmp';
+
 describe('CLI', () => {
     let cli: CLI;
+    const terminal: ITerminal = {
+        cwd: '.',
+        writeFileSync() { /* Ignore */ },
+        readFileSync() { return Buffer.from([]); },
+        readdirSync() { return []; },
+        execSync() { return Buffer.from([]); }
+    };
+
+    before(async () => {
+        await del(TMP_PATH);
+        await new Promise((r) => src('test/data/**').pipe(dest(TMP_PATH)).on('finish', r));
+    });
 
     it('should instantiate', () => {
-        const terminal: ITerminal = {
-            cwd: '.',
-            writeFileSync() { /* Ignore */ },
-            readFileSync() { return Buffer.from([]); },
-            readdirSync() { return []; },
-            execSync() { return new Buffer([]); }
-        };
-
         cli = new CLI(terminal);
     });
 
@@ -31,20 +40,79 @@ describe('CLI', () => {
         await cli.invoke('xcommit', ['Test']);
     });
 
-    it('should start a release', async () => {
-        await cli.invoke('xrelease', ['start']);
-    });
+    for (const project of [
+        'csharp-solution',
+        'nodejs-project'
+    ]) {
+        describe(project, () => {
+            const cwd = resolve(__dirname, `../${TMP_PATH}/${project}`);
 
-    it('should start a release', async () => {
-        await cli.invoke('xrelease', ['finish']);
-    });
+            const projectCLI: CLI = new CLI(Object.assign({}, terminal, {
+                cwd, readFileSync, readdirSync, writeFileSync
+            }));
 
-    it('should start a hotfix', async () => {
-        await cli.invoke('xhotfix', ['start']);
-    });
+            it(`should start a release`, async () => {
+                await projectCLI.invoke('xrelease', ['start']);
+            });
 
-    it('should start a hotfix', async () => {
-        await cli.invoke('xhotfix', ['finish']);
+            it(`should finish a release`, async () => {
+                await projectCLI.invoke('xrelease', ['finish']);
+            });
+
+            it(`should start a hotfix`, async () => {
+                await projectCLI.invoke('xhotfix', ['start']);
+            });
+
+            it(`should finish a hotfix`, async () => {
+                await projectCLI.invoke('xhotfix', ['finish']);
+            });
+
+            it(`should error on invalid command`, async () => {
+                let errored = false;
+
+                await projectCLI.invoke('xhotfix', ['invalid']).catch((e) => errored = true);
+
+                if (!errored) {
+                    throw new Error('Did not error');
+                }
+            });
+        });
+    }
+
+    describe('unknown-project', () => {
+        const cwd = resolve(__dirname, `../${TMP_PATH}/unknown-project`);
+
+        const projectCLI: CLI = new CLI(Object.assign({}, terminal, {
+            cwd, readFileSync, readdirSync, writeFileSync
+        }));
+
+        it(`should start a release and throw`, async () => {
+            try {
+                await projectCLI.invoke('xrelease', ['start']);
+                throw new Error('Did not throw as expected');
+            } catch (e) { /* Success */ }
+        });
+
+        it(`should finish a release and throw`, async () => {
+            try {
+                await projectCLI.invoke('xrelease', ['finish']);
+                throw new Error('Did not throw as expected');
+            } catch (e) { /* Success */ }
+        });
+
+        it(`should start a hotfix and throw`, async () => {
+            try {
+                await projectCLI.invoke('xhotfix', ['start']);
+                throw new Error('Did not throw as expected');
+            } catch (e) { /* Success */ }
+        });
+
+        it(`should finish a hotfix and throw`, async () => {
+            try {
+                await projectCLI.invoke('xhotfix', ['finish']);
+                throw new Error('Did not throw as expected');
+            } catch (e) { /* Success */ }
+        });
     });
 
     it('should start a feature', async () => {
@@ -59,7 +127,53 @@ describe('CLI', () => {
         await cli.invoke('xsc', []);
     });
 
-    it('should init', async () => {
-        await cli.invoke('xsc', ['init']);
+    describe('init command', () => {
+        const cliWithGitflow = new CLI({
+            cwd: '.',
+            writeFileSync() { /* Ignore */ },
+            readFileSync(filePath: string) {
+                if (filePath === '.git/config') {
+                    return Buffer.from('[gitflow ');
+                }
+
+                return Buffer.from([]);
+            },
+            readdirSync() { return []; },
+            execSync(cmd: string) {
+                if (cmd === 'git status') {
+                    throw new Error('Not git repo');
+                }
+
+                return Buffer.from([]);
+            }
+        });
+
+        it('should init with git flow', async () => {
+            await cliWithGitflow.invoke('xsc', ['init']);
+        });
+
+        it('should init without git flow', async () => {
+            await cli.invoke('xsc', ['init']);
+        });
+    });
+
+    describe('without parameters', () => {
+        it('should show x if required command errors', async () => {
+            const cli = new CLI({
+                cwd: '.',
+                writeFileSync() { /* Ignore */ },
+                readFileSync(cmd: string) { return Buffer.from([]); },
+                readdirSync() { return []; },
+                execSync(cmd: string) {
+                    if (cmd === 'git --version') {
+                        throw new Error('Not git repo');
+                    }
+
+                    return Buffer.from([]);
+                }
+            });
+
+            await cli.invoke('xsc', []);
+        });
     });
 });

@@ -19,6 +19,8 @@ export default async function processProductionCommand(cmd: Command, prodCommand
         await finishCommand(cmd, prodCommand);
     } else if (subCommand === SubCommand.Start) {
         await startCommand(cmd, prodCommand);
+    } else {
+        throw new Error(`Unknown command: ${subCommand}`);
     }
 }
 
