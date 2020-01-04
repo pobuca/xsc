@@ -1,3 +1,3 @@
 exclude_paths:
   - "bin/**"
-  - "src/**/*.test.ts"
+  - "*.test.ts"
