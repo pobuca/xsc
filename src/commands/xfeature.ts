@@ -1,4 +1,5 @@
 import Command from '../classes/Command';
+import createPR from './common/createPR';
 import getCurrentBranch from './common/getCurrentBranch';
 
 export default class XFeatureCommand extends Command {
@@ -14,7 +15,7 @@ export default class XFeatureCommand extends Command {
                 break;
             case SubCommand.Finish:
                 const currentBranch = await getCurrentBranch(this.terminal);
-                await this.execSync(`hub pull-request -b develop -m "Merge ${currentBranch} into develop"`);
+                await createPR(this, currentBranch, 'develop');
                 break;
         }
     }

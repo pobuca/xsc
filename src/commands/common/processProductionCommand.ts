@@ -1,5 +1,6 @@
 import { inc, ReleaseType } from 'semver';
 import Command from '../../classes/Command';
+import createPR from './createPR';
 import goToOriginBranch from './goToOriginBranch';
 import inferProjectDetails from './inferProjectDetails';
 import updateProjectVersion from './updateProjectVersion';
@@ -48,14 +49,18 @@ async function startCommand(cmd: Command, prodCommand: ProdCommand) {
 
     await cmd.execSync(`git commit -a -m ${newVersion}`);
     await cmd.execSync(`git push --set-upstream origin ${prodCommand}/${newVersion}`);
-    await cmd.execSync('git stash pop');
+
+    try {
+        await cmd.execSync('git stash pop');
+    } catch (e) { /* Ignore */ }
 }
 
 async function finishCommand(cmd: Command, prodCommand: ProdCommand) {
     const { version } = await inferProjectDetails(cmd.terminal);
 
-    await cmd.execSync(`hub pull-request -b master -m "Merge ${prodCommand}/${version} into master"`);
-    await cmd.execSync(`hub pull-request -b develop -m "Merge ${prodCommand}/${version} into develop"`);
+    await createPR(cmd, `${prodCommand}/${version}`, 'master');
+    await createPR(cmd, `${prodCommand}/${version}`, 'develop');
+
     await cmd.execSync(`git checkout develop`);
     await cmd.execSync(`git branch -d ${prodCommand}/${version}`);
 }

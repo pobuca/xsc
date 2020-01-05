@@ -44,6 +44,8 @@ export default class XSCCommand extends Command {
         await this.verifyCommand('git', 'git --version');
         await this.verifyCommand('git flow', 'git flow version');
         await this.verifyCommand('hub', 'hub --version');
+        await this.verifyCommand('az', 'az --version');
+        await this.verifyCommand('az devops', 'az devops -h');
     }
 
     private async verifyCommand(commandName: string, command: string) {
@@ -61,18 +63,18 @@ export default class XSCCommand extends Command {
         } catch (e) {
             await this.execSync('git init');
             await this.execSync('git add . && git commit -m "Initial commit"');
-            await this.execSync('hub create -p -d "Initial commit"', { stdio: 'inherit' });
         }
 
         this.initializeGitFlow();
-        await this.execSync(`hub ci-status`, { stdio: 'inherit' });
     }
 
     private async initializeGitFlow() {
-        let gitConfigFile = (await this.terminal.readFileSync('.git/config')).toString();
+        const gitConfigFilePath = '.git/config';
+        let gitConfigFile = this.terminal.readFileSync(gitConfigFilePath).toString();
 
         if (!this.containsGitFlowOptions(gitConfigFile)) {
             gitConfigFile += XSCCommand.defaultGitFlowConfig;
+            this.terminal.writeFileSync(gitConfigFilePath, gitConfigFile);
         }
     }
 
