@@ -1,11 +1,44 @@
+// tslint:disable: no-unused-expression
+import { expect } from 'chai';
 import * as del from 'del';
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { dest, src } from 'gulp';
 import { resolve } from 'path';
 import CLI from './CLI';
+import { GitRemoteHost } from './interfaces/GitRemoteHost';
 import ITerminal from './interfaces/ITerminal';
 
 const TMP_PATH = './tmp';
+const TEST_PROJECTS = [
+    'csharp-solution',
+    'nodejs-project'
+];
+
+const GIT_REMOTE_HOST_CONFIGS = [
+    {
+        gitConfig: [
+            '[remote "origin"]',
+            '\turl = https://testorg@dev.azure.com/testorg/test%20project/_git/testrepo',
+            ''
+        ].join('\n'),
+        remoteHost: GitRemoteHost[GitRemoteHost.AzureDevOps]
+    },
+    {
+        gitConfig: [
+            '[remote "origin"]',
+            '\turl = https://github.com/testuser/testrepo',
+            ''
+        ].join('\n'),
+        remoteHost: GitRemoteHost[GitRemoteHost.GitHub]
+    }
+];
+
+const UNKNOWN_HOST_GIT_CONFIG = [
+    '[remote "origin"]',
+    '\t',
+    '\turl = https://unknown.com/testuser/testrepo',
+    ''
+].join('\n');
 
 describe('CLI', () => {
     let cli: CLI;
@@ -40,46 +73,85 @@ describe('CLI', () => {
         await cli.invoke('xcommit', ['Test']);
     });
 
-    for (const project of [
-        'csharp-solution',
-        'nodejs-project'
-    ]) {
-        describe(project, () => {
-            const cwd = resolve(__dirname, `../${TMP_PATH}/${project}`);
+    for (const remoteHostGitConfig of GIT_REMOTE_HOST_CONFIGS) {
+        describe(`remote host: ${remoteHostGitConfig.remoteHost}`, () => {
+            for (const project of TEST_PROJECTS) {
+                describe(project, () => {
+                    const cwd = resolve(__dirname, `../${TMP_PATH}/${project}`);
 
-            const projectCLI: CLI = new CLI(Object.assign({}, terminal, {
-                cwd, readFileSync, readdirSync, writeFileSync
-            }));
+                    const projectCLI: CLI = new CLI(Object.assign({}, terminal, {
+                        cwd,
+                        readFileSync(filePath: string) {
+                            if (/\.git[\/\\]config/.test(filePath)) {
+                                return Buffer.from(remoteHostGitConfig.gitConfig);
+                            } else {
+                                return readFileSync(filePath);
+                            }
+                        },
+                        readdirSync, writeFileSync
+                    }));
 
-            it(`should start a release`, async () => {
-                await projectCLI.invoke('xrelease', ['start']);
-            });
+                    it(`should start a release`, async () => {
+                        await projectCLI.invoke('xrelease', ['start']);
+                    });
 
-            it(`should finish a release`, async () => {
-                await projectCLI.invoke('xrelease', ['finish']);
-            });
+                    it(`should finish a release`, async () => {
+                        await projectCLI.invoke('xrelease', ['finish']);
+                    });
 
-            it(`should start a hotfix`, async () => {
-                await projectCLI.invoke('xhotfix', ['start']);
-            });
+                    it(`should start a hotfix`, async () => {
+                        await projectCLI.invoke('xhotfix', ['start']);
+                    });
 
-            it(`should finish a hotfix`, async () => {
-                await projectCLI.invoke('xhotfix', ['finish']);
-            });
+                    it(`should finish a hotfix`, async () => {
+                        await projectCLI.invoke('xhotfix', ['finish']);
+                    });
 
-            it(`should error on invalid command`, async () => {
-                let errored = false;
+                    it(`should error on invalid command`, async () => {
+                        let errored = false;
 
-                await projectCLI.invoke('xhotfix', ['invalid']).catch((e) => errored = true);
+                        await projectCLI.invoke('xhotfix', ['invalid']).catch((e) => errored = true);
 
-                if (!errored) {
-                    throw new Error('Did not error');
-                }
-            });
+                        if (!errored) {
+                            throw new Error('Did not error');
+                        }
+                    });
+
+                    it('should start a feature', async () => {
+                        await projectCLI.invoke('xfeature', ['start', 'my-feature']);
+                    });
+
+                    it('should finish a feature', async () => {
+                        await projectCLI.invoke('xfeature', ['finish']);
+                    });
+                });
+            }
         });
     }
 
-    describe('unknown-project', () => {
+    describe('unknown host', () => {
+        const cwd = resolve(__dirname, `../${TMP_PATH}/${TEST_PROJECTS[0]}`);
+
+        const projectCLI: CLI = new CLI(Object.assign({}, terminal, {
+            cwd,
+            readFileSync(filePath: string) {
+                if (/\.git[\/\\]config/.test(filePath)) {
+                    return Buffer.from(UNKNOWN_HOST_GIT_CONFIG);
+                } else {
+                    return readFileSync(filePath);
+                }
+            },
+            readdirSync, writeFileSync
+        }));
+
+        it(`should error when finishing a release`, async () => {
+            let errored = false;
+            await projectCLI.invoke('xrelease', ['finish']).catch(() => errored = true);
+            expect(errored).to.be.true;
+        });
+    });
+
+    describe('unknown project', () => {
         const cwd = resolve(__dirname, `../${TMP_PATH}/unknown-project`);
 
         const projectCLI: CLI = new CLI(Object.assign({}, terminal, {
@@ -113,14 +185,6 @@ describe('CLI', () => {
                 throw new Error('Did not throw as expected');
             } catch (e) { /* Success */ }
         });
-    });
-
-    it('should start a feature', async () => {
-        await cli.invoke('xfeature', ['start', 'my-feature']);
-    });
-
-    it('should start a feature', async () => {
-        await cli.invoke('xfeature', ['finish']);
     });
 
     it('should show version', async () => {
