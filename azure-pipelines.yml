@@ -22,21 +22,19 @@ steps:
   - script: npm run setSonarqubeVersion
     displayName: npm run setSonarqubeVersion
 
-  - task: SonarQubePrepare@4
-    inputs:
-      SonarQube: 'Pieflow Sonar'
-      scannerMode: 'CLI'
-      configMode: 'file'
-      extraProperties: |
-        # Additional properties that will be passed to the scanner, 
-        # Put one key=value per line, example:
-        # sonar.exclusions=**/*.bin
-
   - script: npm run build
     displayName: build
 
   - script: npm test
     displayName: npm test
+
+  - script: ls coverage
+
+  - task: SonarQubePrepare@4
+    inputs:
+      SonarQube: 'Pieflow Sonar'
+      scannerMode: 'CLI'
+      configMode: 'file'
     
   - task: SonarQubeAnalyze@4
   
