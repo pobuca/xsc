@@ -19,6 +19,9 @@ steps:
   - script: npm i
     displayName: npm i
 
+  - script: npm run setSonarqubeVersion
+    displayName: npm run setSonarqubeVersion
+
   - task: SonarQubePrepare@4
     inputs:
       SonarQube: 'Pieflow Sonar'
@@ -35,9 +38,6 @@ steps:
 
   - script: npm test
     displayName: npm test
-
-  - script: npm run setSonarqubeVersion
-    displayName: npm run setSonarqubeVersion
     
   - task: SonarQubeAnalyze@4
   
