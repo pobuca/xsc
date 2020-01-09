@@ -23,7 +23,6 @@
 		"test": "nyc mocha",
 		"test:watch": "nyc mocha --reporter spec --watch-extensions ts --watch \"src/**/*.test.ts\"",
 		"build": "tsc",
-		"upload-coverage": "cat ./coverage/lcov.info | codacy-coverage",
 		"build:watch": "tsc -w",
 		"setSonarqubeVersion": "ts-node scripts/setSonarqubeVersion"
 	},
@@ -44,7 +43,6 @@
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
 		"chai": "^4.2.0",
-		"codacy-coverage": "^3.4.0",
 		"concurrently": "^5.0.0",
 		"del": "^5.1.0",
 		"mocha": "^6.2.2",
