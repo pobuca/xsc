@@ -1,7 +1,7 @@
 {
 	"name": "@pobuca/xsc",
 	"description": "A cli tool with common git command sets.",
-	"version": "1.23.0",
+	"version": "1.24.0",
 	"license": "MPL-2.0",
 	"readme": "README.md",
 	"contributors": [
@@ -20,6 +20,7 @@
 	},
 	"scripts": {
 		"dev": "npm link && concurrently -r npm:build:watch npm:test:watch",
+		"test:log": "mocha --reporter spec",
 		"test": "nyc mocha",
 		"test:watch": "nyc mocha --reporter spec --watch-extensions ts --watch \"src/**/*.test.ts\"",
 		"build": "tsc",
