@@ -28,8 +28,6 @@ steps:
   - script: npm test
     displayName: npm test
 
-  - script: ls coverage
-
   - task: SonarQubePrepare@4
     inputs:
       SonarQube: 'Pieflow Sonar'
