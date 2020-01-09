@@ -25,6 +25,9 @@ steps:
   - script: npm run build
     displayName: build
 
+  - script: npm test:log
+    displayName: npm test:log
+
   - script: npm test
     displayName: npm test
 

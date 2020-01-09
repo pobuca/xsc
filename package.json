@@ -20,6 +20,7 @@
 	},
 	"scripts": {
 		"dev": "npm link && concurrently -r npm:build:watch npm:test:watch",
+		"test:log": "mocha --reporter spec",
 		"test": "nyc mocha",
 		"test:watch": "nyc mocha --reporter spec --watch-extensions ts --watch \"src/**/*.test.ts\"",
 		"build": "tsc",
