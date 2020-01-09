@@ -18,11 +18,17 @@ steps:
 
   - script: npm i
     displayName: npm i
+
   - task: SonarQubePrepare@4
     inputs:
       SonarQube: 'Pieflow Sonar'
       scannerMode: 'CLI'
       configMode: 'file'
+      extraProperties: |
+        # Additional properties that will be passed to the scanner, 
+        # Put one key=value per line, example:
+        # sonar.exclusions=**/*.bin
+        sonar.projectKey=xsc:BRANCH:$(Build.SourceBranchName)
 
   - script: npm run build
     displayName: build
