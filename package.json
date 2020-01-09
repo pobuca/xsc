@@ -24,7 +24,8 @@
 		"test:watch": "nyc mocha --reporter spec --watch-extensions ts --watch \"src/**/*.test.ts\"",
 		"build": "tsc",
 		"upload-coverage": "cat ./coverage/lcov.info | codacy-coverage",
-		"build:watch": "tsc -w"
+		"build:watch": "tsc -w",
+		"setSonarqubeVersion": "ts-node scripts/setSonarqubeVersion"
 	},
 	"dependencies": {
 		"@types/eventemitter2": "^4.1.0",
