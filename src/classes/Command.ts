@@ -20,6 +20,6 @@ export default abstract class Command extends EventEmitter2 implements ICommand 
             this.emit('execSync', command);
         }
 
-        await this.terminal.execSync(command, options);
+        this.terminal.execSync(command, options);
     }
 }
