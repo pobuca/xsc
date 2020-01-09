@@ -35,6 +35,9 @@ steps:
 
   - script: npm test
     displayName: npm test
+
+  - script: npm run setSonarqubeVersion
+    displayName: npm run setSonarqubeVersion
     
   - task: SonarQubeAnalyze@4
   
