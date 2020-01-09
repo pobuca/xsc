@@ -10,7 +10,13 @@
             "single"
         ],
         "space-before-function-paren": false,
-        "trailing-comma": false
+        "trailing-comma": [
+            true,
+            {
+                "multiline": "never",
+                "singleline": "never"
+            }
+        ]
     },
     "rulesDirectory": []
 }
